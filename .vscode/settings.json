@@ -1,0 +1,5 @@
+{
+    "search.useGlobalIgnoreFiles": true,
+    "git.decorations.enabled": true,
+    "git.autorefresh": true
+}
