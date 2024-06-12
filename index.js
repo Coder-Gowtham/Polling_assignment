@@ -132,7 +132,7 @@ socket.on('vote', async (data) => {
             io.emit('voteUpdate', updatedOptions);
         } else {
             console.log('User has already voted.');
-            io.emit('alreadyVoted');
+            io.to(socket.id).emit('alreadyVoted');
         }
     } catch (err) {
         console.error('Error handling vote:', err);

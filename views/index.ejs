@@ -11,20 +11,21 @@
 </head>
 <body>
 <div class="container">
-    
+
     <div id="notification" class="notification" style="display: none;">
         <p>You have already voted!</p>
     </div>
 
     <div id="poll" class="section pollSection">
-        <h2>Poll</h2>
+        <h1 id="poll-heading">Poll</h1>
+        <h2 id="question">Which is your favourite Programming Language?</h2>
         <form id="pollForm" onsubmit="submitVote(event)">
             <!-- EJS loop to dynamically generate poll options -->
             <% options.forEach((option) => { %>
-                <div>
+                <div class="radio-buttons">
                     <input type="radio" class="btn-check" name="pollOption" value="<%= option.id %>" id="btnradio<%= option.id %>" autocomplete="off">
                     <label class="btn btn-outline-primary" for="btnradio<%= option.id %>">
-                        <%= option.options %> (<span id="count<%= option.id %>"><%= option.vote_count %></span> votes)
+                        <%= option.options %> ___ (<span id="count<%= option.id %>"><%= option.vote_count %></span> votes)
                     </label>
                 </div>
             <% }) %>
