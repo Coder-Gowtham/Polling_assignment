@@ -10,14 +10,18 @@ socket.on('connect', () => {
 // Receive initial poll data
 socket.on('pollData', (data) => {
     const questionDiv = document.querySelector('.question');
-    questionDiv.textContent = data.question;
+    if (questionDiv) {
+        questionDiv.textContent = data.question;
+    }
 
     data.options.forEach(option => {
         const optionElement = document.querySelector(`input[value="${option.id}"]`);
         if (optionElement) {
             const label = optionElement.nextElementSibling;
             const voteCount = label.querySelector('span');
-            voteCount.textContent = option.vote_count;
+            if (voteCount) {
+                voteCount.textContent = option.vote_count;
+            }
         }
     });
 });
@@ -26,16 +30,20 @@ socket.on('pollData', (data) => {
 function submitVote(event) {
     event.preventDefault(); // Prevent the default form submission behavior
 
+
     // Get the selected option
-    const selectedOption = document.querySelector('input[name="pollOption"]:checked');
+    const username = document.querySelector('input[name="username"]').value;
+    const selectedOption = document.querySelector('input[name="pollOption"]:checked').value;
     
     if (selectedOption) {
         // Emit the vote to the server
-        socket.emit('vote', selectedOption.value);
+        socket.emit('vote', {selectedOption : selectedOption, username : username});
 
         // Disable the submit button
         const submitButton = document.querySelector('#pollForm button[type="submit"]');
-        submitButton.disabled = true;
+        if (submitButton) {
+            submitButton.disabled = true;
+        }
 
         // Disable all radio buttons
         const radioButtons = document.querySelectorAll('input[name="pollOption"]');
@@ -50,10 +58,24 @@ socket.on('voteUpdate', (updatedOptions) => {
     updatedOptions.forEach(option => {
         const voteCountSpan = document.getElementById(`count${option.id}`);
         console.log(`voteCountSpan || ${JSON.stringify(voteCountSpan)}`, voteCountSpan);
-            if (voteCountSpan) {
-                voteCountSpan.textContent = option.vote_count;
-            }
+        if (voteCountSpan) {
+            voteCountSpan.textContent = option.vote_count;
+        }
     });
+});
+
+
+socket.on('alredyVoted', (updatedOptions) => {
+
+    function showPopup() {
+        document.getElementById('popup').style.display = 'block';
+        // Hide the pop-up after 3 seconds
+        setTimeout(() => {
+            document.getElementById('popup').style.display = 'none';
+        }, 3000);
+    }
+
+    showPopup();
 });
 
 // Handle incoming chat messages
@@ -61,7 +83,9 @@ socket.on('chatMessage', (msg) => {
     const chatMessagesDiv = document.getElementById('chatMessages');
     const newMessageDiv = document.createElement('div');
     newMessageDiv.textContent = msg;
-    chatMessagesDiv.appendChild(newMessageDiv);
+    if (chatMessagesDiv) {
+        chatMessagesDiv.appendChild(newMessageDiv);
+    }
 });
 
 // Send a chat message
@@ -82,8 +106,10 @@ function showTyping() {
 // Handle typing indicator
 socket.on('typing', (username) => {
     const typingIndicator = document.getElementById('typingIndicator');
-    typingIndicator.textContent = username;
-    setTimeout(() => {
-        typingIndicator.textContent = '';
-    }, 2000);
+    if (typingIndicator) {
+        typingIndicator.textContent = username;
+        setTimeout(() => {
+            typingIndicator.textContent = '';
+        }, 2000);
+    }
 });
