@@ -6,8 +6,6 @@ const { Pool } = require('pg');
 const bcrypt = require('bcrypt'); // Import bcrypt for password hashing
 const service = require('./service');
 const bodyParser = require("body-parser"); // Import bodyParser for parsing request bodies
-const script = require('./public/script');
-
 
 const pool = new Pool({
     user: 'postgres',
@@ -134,9 +132,7 @@ socket.on('vote', async (data) => {
             io.emit('voteUpdate', updatedOptions);
         } else {
             console.log('User has already voted.');
-            io.emit('alredyVoted');
-            // Optionally, you can send a message to the client indicating that the user has already voted
-            
+            io.emit('alreadyVoted');
         }
     } catch (err) {
         console.error('Error handling vote:', err);

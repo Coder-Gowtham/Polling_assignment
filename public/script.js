@@ -1,5 +1,3 @@
-// script.js
-
 const socket = io();
 
 // Log the connection
@@ -26,18 +24,25 @@ socket.on('pollData', (data) => {
     });
 });
 
+// Show a notification when the user has already voted
+socket.on('alreadyVoted', () => {
+alert("You have already voted. Please click OK to continue.")
+});
+
+
 // Submit a vote
 function submitVote(event) {
     event.preventDefault(); // Prevent the default form submission behavior
 
-
-    // Get the selected option
     const username = document.querySelector('input[name="username"]').value;
-    const selectedOption = document.querySelector('input[name="pollOption"]:checked').value;
-    
-    if (selectedOption) {
+    const selectedOption = document.querySelector('input[name="pollOption"]:checked');
+
+    if (selectedOption && username) {
         // Emit the vote to the server
-        socket.emit('vote', {selectedOption : selectedOption, username : username});
+        socket.emit('vote', {
+            selectedOption: selectedOption.value,
+            username: username
+        });
 
         // Disable the submit button
         const submitButton = document.querySelector('#pollForm button[type="submit"]');
@@ -49,7 +54,7 @@ function submitVote(event) {
         const radioButtons = document.querySelectorAll('input[name="pollOption"]');
         radioButtons.forEach(button => button.disabled = true);
     } else {
-        console.log('No option selected');
+        console.log('No option selected or username missing');
     }
 }
 
@@ -57,25 +62,10 @@ function submitVote(event) {
 socket.on('voteUpdate', (updatedOptions) => {
     updatedOptions.forEach(option => {
         const voteCountSpan = document.getElementById(`count${option.id}`);
-        console.log(`voteCountSpan || ${JSON.stringify(voteCountSpan)}`, voteCountSpan);
         if (voteCountSpan) {
             voteCountSpan.textContent = option.vote_count;
         }
     });
-});
-
-
-socket.on('alredyVoted', (updatedOptions) => {
-
-    function showPopup() {
-        document.getElementById('popup').style.display = 'block';
-        // Hide the pop-up after 3 seconds
-        setTimeout(() => {
-            document.getElementById('popup').style.display = 'none';
-        }, 3000);
-    }
-
-    showPopup();
 });
 
 // Handle incoming chat messages
@@ -91,8 +81,8 @@ socket.on('chatMessage', (msg) => {
 // Send a chat message
 function sendMessage() {
     const messageInput = document.getElementById('messageInput');
-    const message = messageInput.value;
-    if (message.trim() !== '') {
+    const message = messageInput.value.trim();
+    if (message !== '') {
         socket.emit('chatMessage', message);
         messageInput.value = '';
     }
@@ -104,10 +94,10 @@ function showTyping() {
 }
 
 // Handle typing indicator
-socket.on('typing', (username) => {
+socket.on('typing', (message) => {
     const typingIndicator = document.getElementById('typingIndicator');
     if (typingIndicator) {
-        typingIndicator.textContent = username;
+        typingIndicator.textContent = message;
         setTimeout(() => {
             typingIndicator.textContent = '';
         }, 2000);
