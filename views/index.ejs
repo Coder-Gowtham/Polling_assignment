@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-time Polling & Chat</title>
+    <link rel="stylesheet" href="/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+    <div id="poll" class="section pollSection">
+        <h2>Poll</h2>
+        <form id="pollForm" onsubmit="submitVote(event)">
+            <!-- EJS loop to dynamically generate poll options -->
+            <% options.forEach((option) => { %>
+                <div>
+                    <input type="radio" class="btn-check" name="pollOption" value="<%= option.id %>" id="btnradio<%= option.id %>" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="btnradio<%= option.id %>">
+                        <%= option.options %> (<span id="count<%= option.id %>"><%= option.vote_count %></span> votes)
+                    </label>
+                </div>
+            <% }) %>
+
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <button type="submit" class="btn btn-primary">Vote</button>
+            </div>
+        </form>
+    </div>
+    <div id="chat" class="section chatSection">
+        <h2>Chat</h2>
+        <div id="chatMessages"></div>
+        <input id="messageInput" type="text" placeholder="Type a message..." oninput="showTyping()">
+        <button type="button" onclick="sendMessage()">Send</button>
+        <div id="typingIndicator"></div>
+    </div>
+</div>
+
+<!-- Include Socket.IO library -->
+<script src="/socket.io/socket.io.js"></script>
+<script src="/script.js"></script>
+</body>
+</html>

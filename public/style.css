@@ -29,6 +29,12 @@ body {
     background-color: #F8D082;
 }
 
+.pollDiv{
+    color: #640D6B;
+    display: flexbox;
+    margin: 20px;
+}
+
 .chatSection{
     background-color: #640D6B;
     color: white;

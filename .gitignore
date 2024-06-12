@@ -1,0 +1,40 @@
+# Node modules directory
+node_modules/
+
+# Visual Studio Code settings directory
+.vscode/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependency directories
+.bower_components/
+jspm_packages/
+
+# Optional npm cache directory
+.npm/
+
+# Optional eslint cache
+.eslintcache
+
+# Optional REPL history
+.node_repl_history
+
+# Environment variables file
+.env
+
+# MacOS and Linux system files
+.DS_Store
+*.swp
+
+# IDE/Editor directories and files
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
