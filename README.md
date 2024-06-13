@@ -30,11 +30,11 @@ CREATE TABLE chats (
 
 CREATE TABLE master_options (
     id SERIAL PRIMARY KEY,
-    option_text VARCHAR(255) NOT NULL,
+    options VARCHAR(255) NOT NULL,
     vote_count INTEGER DEFAULT 0
 );
 
-INSERT INTO master_options (option_text, vote_count)
+INSERT INTO master_options (options, vote_count)
 VALUES 
     ('C++', 0),
     ('JavaScript', 0),
@@ -42,7 +42,8 @@ VALUES
     ('GoLang', 0),
     ('Java', 0);
 
-    CREATE TABLE registered_users (
+
+CREATE TABLE registered_users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(255)  NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
@@ -51,6 +52,7 @@ VALUES
     selected_option INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
 
 
 
