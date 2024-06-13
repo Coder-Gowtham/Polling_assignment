@@ -27,11 +27,11 @@ const dotenv = require('dotenv');
 // });
 
 const pool = new Pool({
-    user: process.env.PGUSER_PROD,
+    user: postgresGowtham,
     host: 'my-db-instance.cfyq4uu0keti.ap-south-1.rds.amazonaws.com',
-    database: process.env.PGDATABASE_PROD,
-    password: process.env.PGPASSWORD_PROD,
-    port: process.env.PGPORT_PROD,
+    database: initial_d,
+    password: postgresGowtham,
+    port: 5432,
 });
 
 // Test the connection
