@@ -41,7 +41,7 @@
         <h2>Chat</h2>
         <div id="chatMessages"></div>
         <input id="messageInput" type="text" placeholder="Type a message..." oninput="showTyping()">
-        <button type="button" onclick="sendMessage()">Send</button>
+        <button type="button" class="btn btn-success send-btn "  onclick="sendMessage(`<%= username %>`)">Send </button>
         <div id="typingIndicator"></div>
     </div>
 </div>

@@ -26,7 +26,7 @@ socket.on('pollData', (data) => {
 
 // Show a notification when the user has already voted
 socket.on('alreadyVoted', () => {
-alert("You have already voted. Please click OK to continue.")
+    alert("You have already voted. Please click OK to continue.")
 });
 
 
@@ -68,25 +68,47 @@ socket.on('voteUpdate', (updatedOptions) => {
     });
 });
 
+//************************************************************************************************************************************************************************** */
+
+
 // Handle incoming chat messages
 socket.on('chatMessage', (msg) => {
     const chatMessagesDiv = document.getElementById('chatMessages');
     const newMessageDiv = document.createElement('div');
-    newMessageDiv.textContent = msg;
+    newMessageDiv.classList.add('message-box');
+
+    // Split message into username and text
+    const [username, ...messageText] = msg.split(' ');
+    const usernameSpan = document.createElement('span');
+    usernameSpan.classList.add('chat-username');
+    usernameSpan.textContent = username;
+
+    const messageSpan = document.createElement('span');
+    messageSpan.classList.add('chat-message');
+    messageSpan.textContent = messageText.join(' ').trim(); // Join and trim the remaining message parts
+
+    newMessageDiv.appendChild(usernameSpan);
+    newMessageDiv.appendChild(document.createTextNode(' ')); // Add colon separator
+    newMessageDiv.appendChild(messageSpan);
+
     if (chatMessagesDiv) {
         chatMessagesDiv.appendChild(newMessageDiv);
+        chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight; // Auto-scroll to the bottom
     }
 });
 
 // Send a chat message
-function sendMessage() {
+function sendMessage(username) {
     const messageInput = document.getElementById('messageInput');
-    const message = messageInput.value.trim();
-    if (message !== '') {
+    const newUsername = username.split("@")[0];
+    const message = `${newUsername} ${messageInput.value.trim()}`;
+
+    if (messageInput.value.trim() !== '') {
         socket.emit('chatMessage', message);
         messageInput.value = '';
     }
 }
+
 
 // Show typing indicator
 function showTyping() {

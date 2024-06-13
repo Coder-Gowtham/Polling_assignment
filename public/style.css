@@ -43,6 +43,7 @@ body {
 .chatSection{
     background-color: #640D6B;
     color: white;
+    padding: 0.9% 0.9% 0.9% 0.9%;
 }
 
 #poll, #chat {
@@ -68,18 +69,46 @@ body {
     width: 100%;
     flex: 1;
     border: 1px solid #ddd;
-    padding: 10px;
+    padding: 5px;
     margin-bottom: 10px;
     overflow-y: auto;
     background-color: #E65C19;
 
 }
 
+.chat-username {
+    font-weight: bold;
+    font-size: xx-small;
+    color: #007bff; /* Bootstrap primary color */
+    margin-right: 5px; /* Space between username and message */
+    display: block; /* Make username appear as a block element */
+    margin-bottom: 0px; /* Add space below the username */
+}
+
+.message-box {
+    display: block; /* Stack content vertically */
+    background-color: #ffffff;
+    border: 1px solid #007bff; /* Bootstrap primary color */
+    border-radius: 10px; /* Rounded corners */
+    padding: 10px;
+    color: #640D6B;
+    margin-bottom: 10px;
+    word-wrap: break-word; /* Ensure long words wrap */
+    max-width: 100%; /* Prevent from growing too large */
+    overflow: hidden; /* Hide overflow */
+}
+
 #messageInput {
     width: 100%;
     padding: 10px;
     box-sizing: border-box;
-    margin-bottom: 10px;
+    align-self: start;
+
+}
+
+.send-btn{
+    align-self: self-end;
+    width: 30%;
 }
 
 /* Media query for large screens */

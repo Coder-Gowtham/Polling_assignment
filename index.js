@@ -29,11 +29,11 @@ app.use(bodyParser.urlencoded({ extended: true })); // Use bodyParser for parsin
 app.get("/", (req, res) => {
     res.render("home.ejs");
 });
-  
+
 app.get("/login", (req, res) => {
     res.render("login.ejs");
 });
-  
+
 app.get("/register", (req, res) => {
     res.render("register.ejs");
 });
@@ -105,40 +105,40 @@ io.on('connection', (socket) => {
     console.log('A user connected:', socket.id);
 
     // Handle voting
-// Handle voting
-socket.on('vote', async (data) => {
-    console.log('Received vote data:', data);
+    // Handle voting
+    socket.on('vote', async (data) => {
+        console.log('Received vote data:', data);
 
-    const { selectedOption, username } = data;
-    console.log('Selected option and username:', selectedOption, username);
+        const { selectedOption, username } = data;
+        console.log('Selected option and username:', selectedOption, username);
 
-    try {
-        // Check if the user has already voted
-        const checkIsVoted = await service.getIsVoted(pool, username);
-        console.log('User checkIsVoted:', checkIsVoted);
+        try {
+            // Check if the user has already voted
+            const checkIsVoted = await service.getIsVoted(pool, username);
+            console.log('User checkIsVoted:', checkIsVoted);
 
-        // If the user has not voted yet
-        if (checkIsVoted && checkIsVoted[0].is_voted === 0) {
-            // Update the vote count
-            await service.incrementVoteCount(pool, selectedOption);
-            
-            // Mark the user as voted
-            await service.updateIsVoted(pool, username, selectedOption);
-            
-            console.log('User voted successfully.');
+            // If the user has not voted yet
+            if (checkIsVoted && checkIsVoted[0].is_voted === 0) {
+                // Update the vote count
+                await service.incrementVoteCount(pool, selectedOption);
 
-            // Emit updated options to clients
-            const updatedOptions = await service.getAllOptions(pool);
-            io.emit('voteUpdate', updatedOptions);
-        } else {
-            console.log('User has already voted.');
-            io.to(socket.id).emit('alreadyVoted');
+                // Mark the user as voted
+                await service.updateIsVoted(pool, username, selectedOption);
+
+                console.log('User voted successfully.');
+
+                // Emit updated options to clients
+                const updatedOptions = await service.getAllOptions(pool);
+                io.emit('voteUpdate', updatedOptions);
+            } else {
+                console.log('User has already voted.');
+                io.to(socket.id).emit('alreadyVoted');
+            }
+        } catch (err) {
+            console.error('Error handling vote:', err);
+
         }
-    } catch (err) {
-        console.error('Error handling vote:', err);
-        
-    }
-});
+    });
 
 
 
