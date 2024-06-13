@@ -9,21 +9,29 @@ const bodyParser = require("body-parser");
 const dotenv = require('dotenv');
 
 
-if (process.env.NODE_ENV === 'production') {
-    dotenv.config({ path: '.env.production' });
-} else {
-    dotenv.config({ path: '.env.local' });
-}
+// if (process.env.NODE_ENV === 'production') {
+//     dotenv.config({ path: '.env.production' });
+// } else if(process.env.NODE_ENV === 'local'){
+//     dotenv.config({ path: '.env.local' });
+// }
 
-const isLocal = process.env.NODE_ENV === 'development' || !process.env.NODE_ENV;
+// const isLocal = process.env.NODE_ENV === 'development' || !process.env.NODE_ENV;
 
+
+// const pool = new Pool({
+//     user: isLocal ? process.env.PGUSER_LOCAL : process.env.PGUSER_PROD,
+//     host: isLocal ? process.env.PGHOST_LOCAL : process.env.PGHOST_PROD,
+//     database: isLocal ? process.env.PGDATABASE_LOCAL : process.env.PGDATABASE_PROD,
+//     password: isLocal ? process.env.PGPASSWORD_LOCAL : process.env.PGPASSWORD_PROD,
+//     port: isLocal ? process.env.PGPORT_LOCAL : process.env.PGPORT_PROD,
+// });
 
 const pool = new Pool({
-    user: isLocal ? process.env.PGUSER_LOCAL : process.env.PGUSER_PROD,
-    host: isLocal ? process.env.PGHOST_LOCAL : process.env.PGHOST_PROD,
-    database: isLocal ? process.env.PGDATABASE_LOCAL : process.env.PGDATABASE_PROD,
-    password: isLocal ? process.env.PGPASSWORD_LOCAL : process.env.PGPASSWORD_PROD,
-    port: isLocal ? process.env.PGPORT_LOCAL : process.env.PGPORT_PROD,
+    user: process.env.PGUSER_PROD,
+    host: process.env.PGHOST_PROD,
+    database: process.env.PGDATABASE_PROD,
+    password: process.env.PGPASSWORD_PROD,
+    port: process.env.PGPORT_PROD,
 });
 
 const app = express();  
