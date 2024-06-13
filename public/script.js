@@ -1,8 +1,7 @@
 const socket = io();
 
-// Log the connection
 socket.on('connect', () => {
-    console.log('Connected to server:', socket.id);
+    console.log('Connected to server');
 });
 
 // Receive initial poll data
@@ -75,7 +74,6 @@ async function fetchChatHistory() {
 
         chatHistory.forEach(message => {
             const { username, message: text } = message;
-            console.log(username, text);
             displayChatMessage(username, text);
         });
         
@@ -116,7 +114,6 @@ function sendMessage(username) {
 
     if (message !== '') {
         socket.emit('chatMessage', {message, username, newUsername});
-        console.log(newUsername, message);
         messageInput.value = '';
     }
 }
