@@ -27,10 +27,10 @@ const dotenv = require('dotenv');
 // });
 
 const pool = new Pool({
-    user: postgresGowtham,
+    user: 'postgresGowtham',
     host: 'my-db-instance.cfyq4uu0keti.ap-south-1.rds.amazonaws.com',
-    database: initial_d,
-    password: postgresGowtham,
+    database: 'initial_d',
+    password: 'postgresGowtham',
     port: 5432,
 });
 
