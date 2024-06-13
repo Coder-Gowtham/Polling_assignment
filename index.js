@@ -34,6 +34,17 @@ const pool = new Pool({
     port: process.env.PGPORT_PROD,
 });
 
+// Test the connection
+pool.query('SELECT NOW()', (err, res) => {
+    if (err) {
+      console.error('Error connecting to the database:', err.stack);
+    } else {
+      console.log('Connected to the database at:', pool.options.host);
+      console.log('PostgreSQL version:', res.rows[0].version);
+    }
+    pool.end();
+  });
+
 const app = express();  
 const server = http.createServer(app);
 const io = socketIo(server);
