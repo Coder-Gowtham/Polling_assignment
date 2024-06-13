@@ -100,6 +100,19 @@ app.get('/poll', async (req, res) => {
     }
 });
 
+// Endpoint to fetch chat history
+app.get('/api/chat-history', async (req, res) => {
+    try {
+        const client = await pool.connect();
+        const result = await client.query('SELECT * FROM chats ORDER BY createdTime ASC');
+        client.release();
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Error fetching chat history:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 // Socket.IO connection handling
 io.on('connection', (socket) => {
     console.log('A user connected:', socket.id);
@@ -143,10 +156,20 @@ io.on('connection', (socket) => {
 
 
     // Handle chat messages
-    socket.on('chatMessage', (msg) => {
-        io.emit('chatMessage', msg);
-    });
+    socket.on('chatMessage', async (data) => {
+        const { message, username, newUsername } = data;
 
+        // Broadcast the message to all clients
+        io.emit('chatMessage', {message, username, newUsername});
+
+        try {
+            // Save the message to the database
+            await service.saveMessage(pool, message, username, newUsername);
+            console.log('Message saved to database.');
+        } catch (error) {
+            console.error('Error saving message to database:', error);
+        }
+    });
     // Handle typing indicator
     socket.on('typing', (username) => {
         socket.broadcast.emit('typing', username);

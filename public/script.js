@@ -70,45 +70,66 @@ socket.on('voteUpdate', (updatedOptions) => {
 
 //************************************************************************************************************************************************************************** */
 
+// Function to fetch chat history from backend
+async function fetchChatHistory() {
+    try {
+        const response = await fetch('/api/chat-history');
+        const chatHistory = await response.json();
 
-// Handle incoming chat messages
-socket.on('chatMessage', (msg) => {
+        chatHistory.forEach(message => {
+            const { username, message: text } = message;
+            console.log(username, text);
+            displayChatMessage(username, text);
+        });
+        
+    } catch (error) {
+        console.error('Error fetching chat history:', error);
+    }
+}
+
+// Function to display chat message
+function displayChatMessage(username, message) {
     const chatMessagesDiv = document.getElementById('chatMessages');
     const newMessageDiv = document.createElement('div');
     newMessageDiv.classList.add('message-box');
 
-    // Split message into username and text
-    const [username, ...messageText] = msg.split(' ');
     const usernameSpan = document.createElement('span');
     usernameSpan.classList.add('chat-username');
     usernameSpan.textContent = username;
 
     const messageSpan = document.createElement('span');
     messageSpan.classList.add('chat-message');
-    messageSpan.textContent = messageText.join(' ').trim(); // Join and trim the remaining message parts
+    messageSpan.textContent = message.trim();
 
     newMessageDiv.appendChild(usernameSpan);
-    newMessageDiv.appendChild(document.createTextNode(' ')); // Add colon separator
+    newMessageDiv.appendChild(document.createTextNode(''));
     newMessageDiv.appendChild(messageSpan);
 
     if (chatMessagesDiv) {
         chatMessagesDiv.appendChild(newMessageDiv);
-        chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight; // Auto-scroll to the bottom
+        chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
     }
-});
+}
 
-// Send a chat message
+// Event listener to send a chat message
 function sendMessage(username) {
     const messageInput = document.getElementById('messageInput');
     const newUsername = username.split("@")[0];
-    const message = `${newUsername} ${messageInput.value.trim()}`;
+    const message = messageInput.value.trim();
 
-    if (messageInput.value.trim() !== '') {
-        socket.emit('chatMessage', message);
+    if (message !== '') {
+        socket.emit('chatMessage', {message, username, newUsername});
+        console.log(newUsername, message);
         messageInput.value = '';
     }
 }
 
+
+socket.on('chatMessage', ({ message, newUsername }) => {
+    displayChatMessage(newUsername, message);
+});
+// Call fetchChatHistory when the page loads
+fetchChatHistory();
 
 // Show typing indicator
 function showTyping() {

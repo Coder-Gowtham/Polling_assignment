@@ -51,7 +51,7 @@ const updateIsVoted = (pool, username, selectedOption) => {
     return new Promise((resolve, reject) => {
         pool.query(
             `UPDATE registered_users SET is_voted = 1, selected_option = $1 WHERE email = $2;`,
-            [selectedOption,username],
+            [selectedOption, username],
             (err, results) => {
                 if (err) {
                     return reject(err);
@@ -62,10 +62,29 @@ const updateIsVoted = (pool, username, selectedOption) => {
     });
 };
 
+const saveMessage = (pool, message, email, username) => {
+    console.log(`pool, message, username, newUsername`, message, email, username);
+
+    return new Promise((resolve, reject) => {
+        pool.query(
+            'INSERT INTO chats (username, email, message, createdTime) VALUES ($1, $2, $3, CURRENT_TIMESTAMP) RETURNING *',
+            [username, email, message],
+            (err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result.rows[0]); // Return the inserted row data
+                }
+            });
+    });
+
+}
+
 module.exports = {
     getAllOptions,
     incrementVoteCount,
     getIsVoted,
     updateIsVoted,
-    
+    saveMessage
+
 };
