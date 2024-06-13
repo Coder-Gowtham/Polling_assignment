@@ -6,16 +6,27 @@ const { Pool } = require('pg');
 const bcrypt = require('bcrypt'); //password hashing
 const service = require('./service');
 const bodyParser = require("body-parser");
+const dotenv = require('dotenv');
+
+
+if (process.env.NODE_ENV === 'production') {
+    dotenv.config({ path: '.env.production' });
+} else {
+    dotenv.config({ path: '.env.local' });
+}
+
+const isLocal = process.env.NODE_ENV === 'development' || !process.env.NODE_ENV;
+
 
 const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'MYDB',
-    password: 'localhost@123',
-    port: 1024,
+    user: isLocal ? process.env.PGUSER_LOCAL : process.env.PGUSER_PROD,
+    host: isLocal ? process.env.PGHOST_LOCAL : process.env.PGHOST_PROD,
+    database: isLocal ? process.env.PGDATABASE_LOCAL : process.env.PGDATABASE_PROD,
+    password: isLocal ? process.env.PGPASSWORD_LOCAL : process.env.PGPASSWORD_PROD,
+    port: isLocal ? process.env.PGPORT_LOCAL : process.env.PGPORT_PROD,
 });
 
-const app = express();
+const app = express();  
 const server = http.createServer(app);
 const io = socketIo(server);
 
@@ -129,7 +140,7 @@ io.on('connection', (socket) => {
             console.log('User checkIsVoted:', checkIsVoted);
 
             // If the user has not voted yet
-            if (checkIsVoted && checkIsVoted[0].is_voted === 0) {
+            if (checkIsVoted && checkIsVoted[0].is_voted === false) {
                 // Update the vote count
                 await service.incrementVoteCount(pool, selectedOption);
 

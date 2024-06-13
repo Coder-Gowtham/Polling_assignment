@@ -50,7 +50,7 @@ const incrementVoteCount = (pool, optionId, username) => {
 const updateIsVoted = (pool, username, selectedOption) => {
     return new Promise((resolve, reject) => {
         pool.query(
-            `UPDATE registered_users SET is_voted = 1, selected_option = $1 WHERE email = $2;`,
+            `UPDATE registered_users SET is_voted = true, selected_option = $1 WHERE email = $2;`,
             [selectedOption, username],
             (err, results) => {
                 if (err) {

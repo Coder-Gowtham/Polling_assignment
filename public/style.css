@@ -84,9 +84,10 @@ body {
     overflow-y: auto;
 }
 
-.btn-info{
+.btn-outline-primary{
     width: 100%;
     text-align: justify;
+    font-weight: 700;
     margin-bottom: 2%;
 }
 
@@ -107,9 +108,9 @@ body {
 
 .radio-buttons .btn-info:hover,
 .radio-buttons .btn-info.selected {
-    background-color: #0044ff; /* Change background color on hover and when selected */
+    background-color: #007bff; /* Change background color on hover and when selected */
     color: white; /* Change text color on hover and when selected */
-    border-color: #d6e2e2; /* Change border color on hover and when selected */
+    border-color: #e2d6d6; /* Change border color on hover and when selected */
     border-width: 2px;
 }
 
