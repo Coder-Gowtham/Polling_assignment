@@ -9,41 +9,22 @@ const bodyParser = require("body-parser");
 const dotenv = require('dotenv');
 
 
-// if (process.env.NODE_ENV === 'production') {
-//     dotenv.config({ path: '.env.production' });
-// } else if(process.env.NODE_ENV === 'local'){
-//     dotenv.config({ path: '.env.local' });
-// }
+if (process.env.NODE_ENV === 'production') {
+    dotenv.config({ path: '.env.production' });
+} else {
+    dotenv.config({ path: '.env.local' });
+}
 
-// const isLocal = process.env.NODE_ENV === 'development' || !process.env.NODE_ENV;
+const isLocal = process.env.NODE_ENV === 'development' || !process.env.NODE_ENV;
 
-
-// const pool = new Pool({
-//     user: isLocal ? process.env.PGUSER_LOCAL : process.env.PGUSER_PROD,
-//     host: isLocal ? process.env.PGHOST_LOCAL : process.env.PGHOST_PROD,
-//     database: isLocal ? process.env.PGDATABASE_LOCAL : process.env.PGDATABASE_PROD,
-//     password: isLocal ? process.env.PGPASSWORD_LOCAL : process.env.PGPASSWORD_PROD,
-//     port: isLocal ? process.env.PGPORT_LOCAL : process.env.PGPORT_PROD,
-// });
 
 const pool = new Pool({
-    user: 'postgresGowtham',
-    host: 'my-db-instance.cfyq4uu0keti.ap-south-1.rds.amazonaws.com',
-    database: 'initial_d',
-    password: 'postgresGowtham',
-    port: 5432,
+    user: isLocal ? process.env.PGUSER_LOCAL : process.env.PGUSER_PROD,
+    host: isLocal ? process.env.PGHOST_LOCAL : process.env.PGHOST_PROD,
+    database: isLocal ? process.env.PGDATABASE_LOCAL : process.env.PGDATABASE_PROD,
+    password: isLocal ? process.env.PGPASSWORD_LOCAL : process.env.PGPASSWORD_PROD,
+    port: isLocal ? process.env.PGPORT_LOCAL : process.env.PGPORT_PROD,
 });
-
-// Test the connection
-pool.query('SELECT NOW()', (err, res) => {
-    if (err) {
-      console.error('Error connecting to the database:', err.stack);
-    } else {
-      console.log('Connected to the database at:', pool.options.host);
-      console.log('PostgreSQL version:', res.rows[0].version);
-    }
-    pool.end();
-  });
 
 const app = express();  
 const server = http.createServer(app);
@@ -207,7 +188,7 @@ io.on('connection', (socket) => {
     });
 });
 
-const PORT = process.env.PORT || 80;
+const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
