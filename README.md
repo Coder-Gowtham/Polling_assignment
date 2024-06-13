@@ -40,15 +40,18 @@ VALUES
     ('JavaScript', 0),
     ('Python', 0),
     ('GoLang', 0),
-    ('Java', 0);CREATE TABLE registered_users (
+    ('Java', 0);
+
+    CREATE TABLE registered_users (
     id SERIAL PRIMARY KEY,
-    username VARCHAR(255) NOT NULL,
+    username VARCHAR(255)  NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     is_voted BOOLEAN DEFAULT FALSE,
     selected_option INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
 
 
 **Installation Instructions**
