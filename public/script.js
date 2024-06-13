@@ -24,7 +24,7 @@ socket.on('pollData', (data) => {
     });
 });
 
-// Show a notification when the user has already voted
+// Show a alert when the user has already voted
 socket.on('alreadyVoted', () => {
     alert("You have already voted. Please click OK to continue.")
 });
@@ -32,17 +32,14 @@ socket.on('alreadyVoted', () => {
 
 // Submit a vote
 function submitVote(event) {
-    event.preventDefault(); // Prevent the default form submission behavior
+    event.preventDefault(); 
 
     const username = document.querySelector('input[name="username"]').value;
     const selectedOption = document.querySelector('input[name="pollOption"]:checked');
 
     if (selectedOption && username) {
         // Emit the vote to the server
-        socket.emit('vote', {
-            selectedOption: selectedOption.value,
-            username: username
-        });
+        socket.emit('vote', { selectedOption: selectedOption.value, username: username });
 
         // Disable the submit button
         const submitButton = document.querySelector('#pollForm button[type="submit"]');
@@ -73,7 +70,7 @@ socket.on('voteUpdate', (updatedOptions) => {
 // Function to fetch chat history from backend
 async function fetchChatHistory() {
     try {
-        const response = await fetch('/api/chat-history');
+        const response = await fetch('/chat-history');
         const chatHistory = await response.json();
 
         chatHistory.forEach(message => {
@@ -128,6 +125,7 @@ function sendMessage(username) {
 socket.on('chatMessage', ({ message, newUsername }) => {
     displayChatMessage(newUsername, message);
 });
+
 // Call fetchChatHistory when the page loads
 fetchChatHistory();
 

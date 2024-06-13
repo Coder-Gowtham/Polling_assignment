@@ -3,9 +3,9 @@ const http = require('http');
 const socketIo = require('socket.io');
 const path = require('path');
 const { Pool } = require('pg');
-const bcrypt = require('bcrypt'); // Import bcrypt for password hashing
+const bcrypt = require('bcrypt'); //password hashing
 const service = require('./service');
-const bodyParser = require("body-parser"); // Import bodyParser for parsing request bodies
+const bodyParser = require("body-parser");
 
 const pool = new Pool({
     user: 'postgres',
@@ -23,9 +23,9 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(bodyParser.urlencoded({ extended: true })); // Use bodyParser for parsing request bodies
+app.use(bodyParser.urlencoded({ extended: true }));
 
-// Define routes for home, login, and registration
+//Routes for home, login, registration, poll, chat-history
 app.get("/", (req, res) => {
     res.render("home.ejs");
 });
@@ -86,7 +86,7 @@ app.post("/login", async (req, res) => {
     }
 });
 
-
+// To get poll details
 app.get('/poll', async (req, res) => {
     const username = req.query.username;
     console.log('userName', username);
@@ -100,8 +100,8 @@ app.get('/poll', async (req, res) => {
     }
 });
 
-// Endpoint to fetch chat history
-app.get('/api/chat-history', async (req, res) => {
+// chat-history
+app.get('/chat-history', async (req, res) => {
     try {
         const client = await pool.connect();
         const result = await client.query('SELECT * FROM chats ORDER BY createdTime ASC');
@@ -118,10 +118,8 @@ io.on('connection', (socket) => {
     console.log('A user connected:', socket.id);
 
     // Handle voting
-    // Handle voting
     socket.on('vote', async (data) => {
         console.log('Received vote data:', data);
-
         const { selectedOption, username } = data;
         console.log('Selected option and username:', selectedOption, username);
 
@@ -144,6 +142,7 @@ io.on('connection', (socket) => {
                 const updatedOptions = await service.getAllOptions(pool);
                 io.emit('voteUpdate', updatedOptions);
             } else {
+                //If user has already casted the vote then emit event show an alret
                 console.log('User has already voted.');
                 io.to(socket.id).emit('alreadyVoted');
             }
@@ -153,14 +152,12 @@ io.on('connection', (socket) => {
         }
     });
 
-
-
     // Handle chat messages
     socket.on('chatMessage', async (data) => {
         const { message, username, newUsername } = data;
 
         // Broadcast the message to all clients
-        io.emit('chatMessage', {message, username, newUsername});
+        io.emit('chatMessage', { message, username, newUsername });
 
         try {
             // Save the message to the database
