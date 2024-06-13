@@ -28,7 +28,7 @@ const dotenv = require('dotenv');
 
 const pool = new Pool({
     user: process.env.PGUSER_PROD,
-    host: process.env.PGHOST_PROD,
+    host: 'my-db-instance.cfyq4uu0keti.ap-south-1.rds.amazonaws.com',
     database: process.env.PGDATABASE_PROD,
     password: process.env.PGPASSWORD_PROD,
     port: process.env.PGPORT_PROD,
