@@ -29,7 +29,6 @@ pool.query('SELECT NOW()', (err, res) => {
     } else {
       console.log('Database successfully connected');
     }
-    pool.end();
 })
 
 const app = express();
