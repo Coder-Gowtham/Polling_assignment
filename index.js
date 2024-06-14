@@ -3,20 +3,14 @@ const http = require('http');
 const socketIo = require('socket.io');
 const path = require('path');
 const { Pool } = require('pg');
-const bcrypt = require('bcrypt'); //password hashing
+const bcrypt = require('bcrypt'); // password hashing
 const service = require('./service');
 const bodyParser = require("body-parser");
 const dotenv = require('dotenv');
 
-
-if (process.env.NODE_ENV === 'production') {
-    dotenv.config({ path: '.env.production' });
-} else {
-    dotenv.config({ path: '.env.local' });
-}
+dotenv.config();
 
 const isLocal = process.env.NODE_ENV === 'development' || !process.env.NODE_ENV;
-
 
 const pool = new Pool({
     user: isLocal ? process.env.PGUSER_LOCAL : process.env.PGUSER_PROD,
@@ -26,7 +20,7 @@ const pool = new Pool({
     port: isLocal ? process.env.PGPORT_LOCAL : process.env.PGPORT_PROD,
 });
 
-const app = express();  
+const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
@@ -36,7 +30,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-//Routes for home, login, registration, poll, chat-history
+// Routes for home, login, registration, poll, chat-history
 app.get("/", (req, res) => {
     res.render("home.ejs");
 });
@@ -67,7 +61,7 @@ app.post("/register", async (req, res) => {
         await pool.query("INSERT INTO registered_users(email, password) VALUES ($1, $2)", [username, hash]);
         res.redirect(`/poll?username=${username}`);
     } catch (err) {
-        console.error(err);
+        console.error("Error during registration:", err);
         res.status(500).send("Internal Server Error");
     }
 });
@@ -92,7 +86,7 @@ app.post("/login", async (req, res) => {
             res.status(400).send("Incorrect Password. Please try again.");
         }
     } catch (err) {
-        console.error(err);
+        console.error("Error during login:", err);
         res.status(500).send("Internal Server Error");
     }
 });
@@ -153,13 +147,12 @@ io.on('connection', (socket) => {
                 const updatedOptions = await service.getAllOptions(pool);
                 io.emit('voteUpdate', updatedOptions);
             } else {
-                //If user has already casted the vote then emit event show an alret
+                // If user has already cast the vote, emit event to show an alert
                 console.log('User has already voted.');
                 io.to(socket.id).emit('alreadyVoted');
             }
         } catch (err) {
             console.error('Error handling vote:', err);
-
         }
     });
 
@@ -178,6 +171,7 @@ io.on('connection', (socket) => {
             console.error('Error saving message to database:', error);
         }
     });
+
     // Handle typing indicator
     socket.on('typing', (username) => {
         socket.broadcast.emit('typing', username);
@@ -190,5 +184,5 @@ io.on('connection', (socket) => {
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
