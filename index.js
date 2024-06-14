@@ -20,6 +20,15 @@ const pool = new Pool({
     port: isLocal ? process.env.PGPORT_LOCAL : process.env.PGPORT_PROD,
 });
 
+pool.query('SELECT NOW()', (err, res) => {
+    if (err) {
+      console.error('Error connecting to database');
+    } else {
+      console.log('Database successfully connected');
+    }
+    pool.end();
+})
+
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
@@ -182,9 +191,8 @@ io.on('connection', (socket) => {
     });
 });
 
-const PORT = process.env.PORT || 3000;
-const HOST = '0.0.0.0'; // Bind to all network interfaces
+const PORT = process.env.PGPORT_PROD || 3000;
 
-server.listen(PORT, HOST, () => {
-    console.log(`Server running on http://${HOST}:${PORT}`);
+server.listen(PORT, () => {
+    console.log(`Server running on PORT ${PORT}`);
 });
