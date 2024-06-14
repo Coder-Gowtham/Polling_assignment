@@ -140,29 +140,32 @@ body {
     width: 30%;
 }
 
-/* Media query for large screens */
 @media (min-width: 1024px) {
     .container {
+        display: flex;
         flex-direction: row;
         /* Align sections side by side */
     }
 
     .section {
-        height: 100vh;
-        flex: none;
-        width: 50%;
+        height: 100vh; /* Full viewport height */
+        flex: 1; /* Grow to fill available space */
+        max-width: 50%; /* Limit width to 50% of viewport */
     }
 }
+
 
 /* Media query for medium and small screens */
 @media (max-width: 1023px) {
     .container {
+        display: flex;
         flex-direction: column;
         /* Stack sections vertically */
     }
 
     .section {
-        height: 50vh;
-        width: 100%;
+        height: auto; /* Auto height based on content */
+        width: 100%; /* Full width of viewport */
+        max-width: 100%; /* Limit width to full viewport */
     }
 }
