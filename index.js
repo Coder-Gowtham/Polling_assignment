@@ -18,6 +18,9 @@ const pool = new Pool({
     database: isLocal ? process.env.PGDATABASE_LOCAL : process.env.PGDATABASE_PROD,
     password: isLocal ? process.env.PGPASSWORD_LOCAL : process.env.PGPASSWORD_PROD,
     port: isLocal ? process.env.PGPORT_LOCAL : process.env.PGPORT_PROD,
+    ssl: {
+        rejectUnauthorized: false, // For self-signed certificates or other cases where SSL validation fails
+      },
 });
 
 pool.query('SELECT NOW()', (err, res) => {
